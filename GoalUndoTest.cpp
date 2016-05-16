@@ -95,3 +95,23 @@ TEST(GoslUndoTest, RemoveEmptyGoal)
     Goaldelete.undoGoal();
     ASSERT_EQ("", Goaldelete.getGoal() );
 }
+
+TEST(GoslUndoTest, RemoveOperation)
+{
+    GoalUndo operationdelete;
+    operationdelete.addOperation("Fitness", "Running");
+    operationdelete.addOperation("Walking");
+    operationdelete.addOperation("Study", "Timetable");
+    operationdelete.undoOperation();
+    ASSERT_EQ("Running Walking", operationdelete.getOperations() );
+    ASSERT_EQ("Fitness", operationdelete.getGoal());
+}
+
+TEST(GoslUndoTest, RemoveEmptyOperation)
+{
+    GoalUndo operationdelete;
+    operationdelete.addOperation("Fitness", "Running");
+    operationdelete.undoOperation();
+    ASSERT_EQ("", operationdelete.getOperations() );
+    ASSERT_EQ("", operationdelete.getGoal());
+}
