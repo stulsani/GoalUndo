@@ -77,3 +77,21 @@ TEST(GoslUndoTest, GetOperations)
     getOperation.addOperation("Wake up early in the Morning");
     ASSERT_EQ("Timetable Wake up early in the Morning", getOperation.getOperations() );
 }
+
+TEST(GoslUndoTest, RemoveGoal)
+{
+    GoalUndo Goaldelete;
+    Goaldelete.addOperation("Fitness", "Running");
+    Goaldelete.addOperation("Study", "Timetable");
+    Goaldelete.addOperation("Hard Work");
+    Goaldelete.undoGoal();
+    ASSERT_EQ("Fitness", Goaldelete.getGoal() );
+}
+
+TEST(GoslUndoTest, RemoveEmptyGoal)
+{
+    GoalUndo Goaldelete;
+    Goaldelete.addOperation("Fitness", "Running");
+    Goaldelete.undoGoal();
+    ASSERT_EQ("", Goaldelete.getGoal() );
+}
