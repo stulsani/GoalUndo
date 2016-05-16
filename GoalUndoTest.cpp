@@ -37,6 +37,7 @@ TEST(GoslUndoTest, AddEmptyOperation)
 {
     GoalUndo OperationEmpty;
     OperationEmpty.addOperation("Fitness", "");
+    OperationEmpty.addOperation("");
     ASSERT_EQ("", OperationEmpty.getGoal() );
 }
 
@@ -65,4 +66,14 @@ TEST(GoslUndoTest, GetEmptyOperation)
     emptyOperation.undoOperation();
     ASSERT_EQ("", emptyOperation.getOperations() );
     ASSERT_EQ("", emptyOperation.getGoal() );
+}
+
+TEST(GoslUndoTest, GetOperations)
+{
+    GoalUndo getOperation;
+    getOperation.addOperation("Fitness", "Running");
+    getOperation.undoOperation();
+    getOperation.addOperation("Study", "Timetable");
+    getOperation.addOperation("Wake up early in the Morning");
+    ASSERT_EQ("Timetable Wake up early in the Morning", getOperation.getOperations() );
 }
