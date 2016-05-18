@@ -41,6 +41,13 @@ TEST(GoslUndoTest, AddEmptyOperation)
     ASSERT_EQ("", OperationEmpty.getGoal() );
 }
 
+TEST(GoslUndoTest, AddOperationWithoutGoal)
+{
+    GoalUndo GoalEmpty;
+    GoalEmpty.addOperation("Running");
+    ASSERT_EQ("Running", GoalEmpty.getOperations() );
+}
+
 TEST(GoslUndoTest, AddGoals)
 {
     GoalUndo addGoals;
@@ -94,6 +101,8 @@ TEST(GoslUndoTest, RemoveEmptyGoal)
     Goaldelete.addOperation("Fitness", "Running");
     Goaldelete.undoGoal();
     ASSERT_EQ("", Goaldelete.getGoal() );
+		Goaldelete.undoGoal();
+		ASSERT_EQ("", Goaldelete.getGoal() );
 }
 
 TEST(GoslUndoTest, RemoveOperation)
@@ -112,6 +121,60 @@ TEST(GoslUndoTest, RemoveEmptyOperation)
     GoalUndo operationdelete;
     operationdelete.addOperation("Fitness", "Running");
     operationdelete.undoOperation();
+    ASSERT_EQ("", operationdelete.getOperations() );
+		operationdelete.undoOperation();
+    ASSERT_EQ("", operationdelete.getGoal());
+}
+
+TEST(GoslUndoTest, RemoveLastOperation)
+{
+    GoalUndo operationdelete;
+    operationdelete.addOperation("Fitness", "Running");
+		operationdelete.addOperation("Walking");
+    operationdelete.undoOperation();
+    ASSERT_EQ("Running", operationdelete.getOperations() );
+		operationdelete.undoOperation();
+    ASSERT_EQ("", operationdelete.getGoal());
+}
+
+TEST(GoslUndoTest, RemoveSpecificOperation)
+{
+    GoalUndo operationdelete;
+    operationdelete.addOperation("Fitness", "Running");
+    operationdelete.addOperation("Walking");
+    operationdelete.addOperation("Cyclying");
+    operationdelete.undoOperation("Walking");
+    ASSERT_EQ("Running Cyclying", operationdelete.getOperations() );
+    ASSERT_EQ("Fitness", operationdelete.getGoal());
+}
+
+TEST(GoslUndoTest, RemoveEmptyOperationTwice)
+{
+    GoalUndo operationdelete;
+		operationdelete.addOperation("Fitness", "Running");
+    operationdelete.undoOperation("Running");
+		/* This step gives segmentation fault which is a bug present in the program*/
+		//operationdelete.undoOperation();
+    ASSERT_EQ("", operationdelete.getOperations() );
+}
+
+TEST(GoslUndoTest, RemoveTheOnlySpecificOperationinGoal)
+{
+    GoalUndo operationdelete;
+    operationdelete.addOperation("Weight loss", "diet");
+    operationdelete.undoOperation("diet");
+		operationdelete.undoGoal();
+		operationdelete.undoOperation("diet");
+    ASSERT_EQ("", operationdelete.getOperations() );
+    ASSERT_EQ("", operationdelete.getGoal());
+}
+
+TEST(GoslUndoTest, RemoveTheOnlySpecificOperationtwice)
+{
+    GoalUndo operationdelete;
+    operationdelete.addOperation("Weight loss", "diet");
+    operationdelete.undoOperation("diet");
+		operationdelete.undoOperation("diet");
     ASSERT_EQ("", operationdelete.getOperations() );
     ASSERT_EQ("", operationdelete.getGoal());
 }
